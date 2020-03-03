@@ -82,19 +82,21 @@ export class AuthenticationService {
     this.loadingController.create({keyboardClose: true, message: 'Loging In ...'})
       .then(loadingEl => {
         loadingEl.present(); // show loading
-        this.http.post<any>('http://example.com/api', uploadData)
+        this.http.post<any>('http://vps790464.ovh.net/api/login', uploadData)
         .subscribe(
           res => {
             loadingEl.dismiss(); // hide loading
             // example return data 
             // res = { isSuccess: true, tokenKey: 'token-key', others: 'others..' }
-            if (res.isSuccess) { 
-              return this.storage.set(TOKEN_KEY, res.tokenKey).then(() => {
-                this.authenticationState.next(true);
-              });
-            } else {
+            if (res.data.hasOwnProperty('ER01') == true) {
+              // Credenciales incorrectas
               this.loginFailedAlert();
               this.logout();
+            } else {
+              // Autenticado correctamente
+              return this.storage.set(TOKEN_KEY, res.data.api_token).then(() => {
+                this.authenticationState.next(true);
+              });
             }
           },
           err => {

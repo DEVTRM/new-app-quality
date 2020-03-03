@@ -10,28 +10,19 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle>Protected Page!</ion-card-subtitle>
-      <ion-card-title>Login is required!</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum minima reiciendis sequi eveniet neque iste autem animi minus, est quod temporibus delectus dignissimos earum atque corrupti sapiente blanditiis aspernatur placeat?
-    </ion-card-content>
-  </ion-card>
+  <div align="center" [hidden]="menu_gif_hidden">
+    <img src="../../assets/video/menu.gif">
+  </div>
 
-  <ion-list>
-    <ion-item *ngFor="let item of items">
-      <ion-icon [name]="item.icon" slot="start"></ion-icon>
-      {{item.title}}
-      <div class="item-note" slot="end">
-        {{item.note}}
-      </div>
-    </ion-item>
-  </ion-list>
-  <!--
-    <div *ngIf="selectedItem" padding>
-      You navigated here from <b>{{selectedItem.title }}</b>
-    </div>
-  -->
+  <ion-content color="dark" [hidden]="!menu_gif_hidden">
+    <img src="../../assets/img/1.jpeg" style="margin-top: 39%;">
+      <button id="pedir" routerLink="/soon" style="margin-left:71%; margin-top: -42%; float:left; border-radius: 50%; width: 61px; height: 61px; z-index: 3; position: relative; background-color: transparent;"></button>
+      <button id="galeria" routerLink="/soon" style="margin-left:73%; margin-top: -72%; float:left; border-radius: 50%; width: 61px; height: 61px; z-index: 3; position: relative; background-color: transparent;"></button>
+      <button id="carta" routerLink="/cartas" style="margin-left:42.5%; margin-top: -93%; float:left; border-radius: 50%; width: 61px; height: 61px; z-index: 3; position: relative; background-color: transparent;"></button>
+      <button id="reservas" routerLink="/soon" style="margin-left:11.5%; margin-top: -72%; float:left; border-radius: 50%; width: 61px; height: 61px; z-index: 3; position: relative; background-color: transparent;"></button>
+      <button id="musica" routerLink="/soon" style="margin-left:13.2%; margin-top: -42%; float:left; border-radius: 50%; width: 61px; height: 61px; z-index: 3; position: relative; background-color: transparent;"></button>
+      <button id="blog"  routerLink="/soon"style="margin-left:42.5%; margin-top: -27%; float:left; border-radius: 50%; width: 61px; height: 61px; z-index: 3; position: relative; background-color: transparent;"></button>
+   
+  
+  </ion-content>
 </ion-content>

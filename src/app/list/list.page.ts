@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-list',
@@ -19,21 +20,16 @@ export class ListPage implements OnInit {
     'bluetooth',
     'build'
   ];
+  public menu_gif_hidden: boolean;
   public items: Array<{ title: string; note: string; icon: string }> = [];
-  constructor() {
-    for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
+  constructor(public navController: NavController) {
+    this.menu_gif_hidden = false;
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.menu_gif_hidden = true;
+    }, 5000);
   }
-  // add back when alpha.4 is out
-  // navigate(item) {
-  //   this.router.navigate(['/list', JSON.stringify(item)]);
-  // }
+
 }

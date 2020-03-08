@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/list"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Bookings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h1>Bienvenido a bookings</h1>
+
+  <form [formGroup]="bookingsForm" (ngSubmit)="logBookingForm()">
+      <ion-item>
+        <ion-label floating>Número de personas:</ion-label>
+        <ion-input type="text" formControlName="n_persons"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Zona de preferencia</ion-label>
+        <ion-select formControlName="place" placeholder="Zona de preferencia" ionChange="selectPlace($event)">
+          <ion-select-option *ngFor="let place of places" value="{{place.id}}" selected="">{{place.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Fecha</ion-label>
+        <ion-datetime 
+          formControlName="booking_date" 
+          doneText="Elegir" 
+          cancelText="Cancelar"
+          displayFormat="DD/MMMM/YYYY"
+          yearValues="2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030"
+          monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+          
+        >
+        </ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>Hora</ion-label>
+        <ion-datetime 
+            formControlName="booking_hour" 
+            doneText="Elegir" 
+            cancelText="Cancelar"
+            displayFormat="HH:mm">
+        </ion-datetime>
+      </ion-item>
+    <ion-button type="submit">Realizar reserva</ion-button>
+  </form>
+</ion-content>

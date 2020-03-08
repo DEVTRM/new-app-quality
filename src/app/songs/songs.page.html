@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/list"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Songs</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+
+    <form [formGroup]="songForm" (ngSubmit)="logForm()">
+      <h2>Pide tu canción</h2>
+      <ion-item>
+        <ion-input type="text" formControlName="song"></ion-input>
+      </ion-item>
+      <ion-button type="submit">Pedir canción</ion-button>
+    </form>
+
+  </ion-item>
+</ion-content>

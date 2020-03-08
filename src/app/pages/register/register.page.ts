@@ -3,7 +3,6 @@ import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms'
 import { UsernameValidator } from '../../validators/username.validator';
 import { PhoneValidator } from '../../validators/phone.validator';
 import { PasswordValidator } from '../../validators/password.validator';
-import { CountryPhone } from './country-phone.model';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
 
@@ -16,9 +15,7 @@ export class RegisterPage implements OnInit {
 
   validations_form: FormGroup;
   matching_passwords_group: FormGroup;
-  country_phone_group: FormGroup;
 
-  countries: Array<CountryPhone>;
   genders: Array<string>;
 
   constructor(
@@ -28,54 +25,35 @@ export class RegisterPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    
-    this.countries = [
-      new CountryPhone('BD', 'Bangladesh'),
-      new CountryPhone('JP', 'Japan')
-    ];
 
     this.genders = [
-      "Male",
-      "Female"
+      "Hombre",
+      "Mujer"
     ];
 
     this.matching_passwords_group = new FormGroup({
       password: new FormControl('', Validators.compose([
         Validators.minLength(5),
         Validators.required,
-        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z0-9!$%@#£€*?&]+$')
+        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z0-9]+$')
       ])),
       confirm_password: new FormControl('', Validators.required)
     }, (formGroup: FormGroup) => {
       return PasswordValidator.areEqual(formGroup);
     });
 
-    let country = new FormControl(this.countries[0], Validators.required);
     let phone = new FormControl('', Validators.compose([
-      Validators.required,
-      PhoneValidator.validCountryPhone(country)
+      Validators.required
     ]));
-    this.country_phone_group = new FormGroup({
-      country: country,
-      phone: phone
-    });
 
     this.validations_form = this.formBuilder.group({
-      username: new FormControl('', Validators.compose([
-        UsernameValidator.validUsername,
-        Validators.maxLength(25),
-        Validators.minLength(5),
-        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z0-9]+$'),
-        Validators.required
-      ])),
       name: new FormControl('', Validators.required),
-      lastname: new FormControl('', Validators.required),
       email: new FormControl('', Validators.compose([
         Validators.required,
         Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
       ])),
+      phone: new FormControl('', Validators.required),
       gender: new FormControl(this.genders[0], Validators.required),
-      country_phone: this.country_phone_group,
       matching_passwords: this.matching_passwords_group,
       terms: new FormControl(true, Validators.pattern('true'))
     });
@@ -87,46 +65,36 @@ export class RegisterPage implements OnInit {
   }
 
   validation_messages = {
-    'username': [
-      { type: 'required', message: 'Username is required.' },
-      { type: 'minlength', message: 'Username must be at least 5 characters long.' },
-      { type: 'maxlength', message: 'Username cannot be more than 25 characters long.' },
-      { type: 'pattern', message: 'Your username must contain only numbers and letters.' },
-      { type: 'validUsername', message: 'Your username has already been taken.' }
-    ],
     'name': [
-      { type: 'required', message: 'Name is required.' }
-    ],
-    'lastname': [
-      { type: 'required', message: 'Last name is required.' }
+      { type: 'required', message: 'El nombre es obligatorio.' }
     ],
     'email': [
-      { type: 'required', message: 'Email is required.' },
-      { type: 'pattern', message: 'Please enter a valid email.' }
+      { type: 'required', message: 'El correo electrónico es obligatorio.' },
+      { type: 'pattern', message: 'Por favor, introduce un correo válido.' }
     ],
     'phone': [
-      { type: 'required', message: 'Phone is required.' },
-      { type: 'validCountryPhone', message: 'The phone is incorrect for the selected country.' }
+      { type: 'required', message: 'El teléfono es obligatorio.' },
     ],
     'password': [
-      { type: 'required', message: 'Password is required.' },
-      { type: 'minlength', message: 'Password must be at least 5 characters long.' },
-      { type: 'pattern', message: 'Your password must contain uppercase, lowercase, special chars and number.' }
+      { type: 'required', message: 'La contraseña es obligatoria.' },
+      { type: 'minlength', message: 'La contraseña debe de ser de al menos 5 caracteres.' },
+      { type: 'pattern', message: 'La contraseña debe contener letras y números.' }
     ],
     'confirm_password': [
-      { type: 'required', message: 'Confirm password is required.' }
+      { type: 'required', message: 'Es boligatorio confirmar la contraseña.' }
     ],
     'matching_passwords': [
-      { type: 'areEqual', message: 'Password mismatch.' }
+      { type: 'areEqual', message: 'Las contraseñas no coinciden.' }
     ],
     'terms': [
-      { type: 'pattern', message: 'You must accept terms and conditions.' }
+      { type: 'pattern', message: 'Debes aceptar los términos y condiciones de uso.' }
     ],
   };
 
   onSubmitRegister(values){
     this.authenticationService.register(values);
-    this.router.navigate(["list"]);
+    /*
+    this.router.navigate(["list"]); */
   }
 
   /**

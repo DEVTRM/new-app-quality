@@ -17,8 +17,19 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: './list/list.module#ListPageModule'
   },
+  {
+    path: 'songs',
+    canActivate: [AuthGuard],
+    loadChildren: './songs/songs.module#SongsPageModule'
+  },
+  {
+    path: 'bookings',
+    canActivate: [AuthGuard],
+    loadChildren: './bookings/bookings.module#BookingsPageModule'
+  },
   { path: 'register', loadChildren: './pages/register/register.module#RegisterPageModule' },
-  { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' }
+  { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
+  { path: 'bookings', loadChildren: './bookings/bookings.module#BookingsPageModule' }
 ];
 
 @NgModule({

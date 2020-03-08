@@ -36,35 +36,55 @@ export class AuthenticationService {
   }
 
   register(values) {
-    
+
+    if (values.gender == "Hombre") {
+      var gender_selected = "0";
+    } else {
+      var gender_selected = "1";
+    }
+
     const uploadData = new FormData(); // declar form object
-    uploadData.append('username', values.username);
     uploadData.append('name', values.name);
-    uploadData.append('lastname', values.lastname);
     uploadData.append('email', values.email);
-    uploadData.append('gender', values.gender);
-    uploadData.append('country', values.country_phone.country);
-    uploadData.append('phone', values.country_phone.phone);
+    uploadData.append('gender', gender_selected);
+    uploadData.append('phone', values.phone);
     uploadData.append('password', values.matching_passwords.password);
-    uploadData.append('confirm_password', values.matching_passwords.confirm_password);
-    uploadData.append('terms', values.terms);
+    uploadData.append('password_confirmation', values.matching_passwords.confirm_password);
     
-    this.loadingController.create({keyboardClose: true, message: 'Loging In ...'})
+    console.log("Datos signup: ");
+    console.log(uploadData);
+    this.loadingController.create({keyboardClose: true, message: 'Entrando ...'})
       .then(loadingEl => {
         loadingEl.present(); // show loading
-        this.http.post<any>('http://example.com/api', uploadData)
+        this.http.post<any>('http://127.0.0.1:8000/api/auth/signup', uploadData)
         .subscribe(
           res => {
-            loadingEl.dismiss(); // hide loading
+
+            // Compruebo si el usuaro se ha creado correctamente
+            if (res.hasOwnProperty('message')) {
+              let login_data = {
+                'email': uploadData.get('email'),
+                'password': uploadData.get('password'),
+              }
+
+              this.login(login_data);
+              this.router.navigate(['list']);
+            } else {
+              this.signUpFailedAlert(res.ERR_MSG);
+            }
+
+            // Hide loading
+            loadingEl.dismiss();
+
             // example return data 
             // res = { isSuccess: true, tokenKey: 'token-key', others: 'others..' }
-            if (res.isSuccess) { 
-              return this.storage.set(TOKEN_KEY, res.tokenKey).then(() => {
+            /* if (res.isSuccess) { 
+              return this.storage.set(TOKEN_KEY, res.access_token).then(() => {
                 this.authenticationState.next(true);
               });
             } else {
-              this.registerFailedAlert('Please register with valid data!');
-            }
+              this.registerFailedAlert('Por favor, introduce valores válidos para el registro!');
+            } */
           },
           err => {
             console.log(err);
@@ -79,27 +99,22 @@ export class AuthenticationService {
     uploadData.append('email', values.email);
     uploadData.append('password', values.password);
     
-    this.loadingController.create({keyboardClose: true, message: 'Loging In ...'})
+    this.loadingController.create({keyboardClose: true, message: 'Entrando ...'})
       .then(loadingEl => {
         loadingEl.present(); // show loading
-        this.http.post<any>('http://vps790464.ovh.net/api/login', uploadData)
+        this.http.post<any>('http://127.0.0.1:8000/api/auth/login', uploadData)
         .subscribe(
           res => {
             loadingEl.dismiss(); // hide loading
-            // example return data 
             // res = { isSuccess: true, tokenKey: 'token-key', others: 'others..' }
-            if (res.data.hasOwnProperty('ER01') == true) {
-              // Credenciales incorrectas
-              this.loginFailedAlert();
-              this.logout();
-            } else {
-              // Autenticado correctamente
-              return this.storage.set(TOKEN_KEY, res.data.api_token).then(() => {
-                this.authenticationState.next(true);
-              });
-            }
+            // Autenticado correctamente
+            return this.storage.set(TOKEN_KEY, res.access_token).then(() => {
+              this.authenticationState.next(true);
+            });
           },
           err => {
+            loadingEl.dismiss();
+            this.loginFailedAlert();
             this.logout();
             console.log(err);
           }
@@ -121,21 +136,23 @@ export class AuthenticationService {
     return this.authenticationState.value;
   }
 
-  async registerFailedAlert(str) {
+
+  async loginFailedAlert() {
     const alert = await this.alertController.create({
-      header: 'Registration Invalid!',
-      message: str,
+      header: 'Error en el login',
+      message: 'Por favor, introduce un correo/movil y contraseña válidos.',
       buttons: ['OK']
     });
 
     await alert.present();
-  } 
+  }
 
-  async loginFailedAlert() {
+
+  async signUpFailedAlert(err_msg) {
     const alert = await this.alertController.create({
-      header: 'Login Invalid!',
-      message: 'Please login with valid username and password.',
-      buttons: ['OK']
+      header: 'Error en el registro!',
+      message: err_msg,
+      buttons: ['Ok']
     });
 
     await alert.present();
